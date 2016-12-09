@@ -26,7 +26,6 @@ import com.google.zxing.client.android.clipboard.ClipboardInterface;
 import com.google.zxing.client.android.result.ResultButtonListener;
 import com.google.zxing.client.android.result.ResultHandler;
 import com.google.zxing.client.android.result.ResultHandlerFactory;
-import com.google.zxing.client.android.share.ShareActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -82,8 +81,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   private static final long BULK_MODE_SCAN_DELAY_MS = 1000L;
 
   private static final String[] ZXING_URLS = { "http://zxing.appspot.com/scan", "zxing://scan/" };
-
-  private static final int HISTORY_REQUEST_CODE = 0x0000bacc;
 
   private static final Collection<ResultMetadataType> DISPLAYABLE_METADATA_TYPES =
       EnumSet.of(ResultMetadataType.ISSUE_NUMBER,
@@ -335,38 +332,38 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     return super.onKeyDown(keyCode, event);
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater menuInflater = getMenuInflater();
-    menuInflater.inflate(R.menu.capture, menu);
-    return super.onCreateOptionsMenu(menu);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-    switch (item.getItemId()) {
-      case R.id.menu_share:
-        intent.setClassName(this, ShareActivity.class.getName());
-        startActivity(intent);
-        break;
-      case R.id.menu_history:
-
-        break;
-      case R.id.menu_settings:
-        intent.setClassName(this, PreferencesActivity.class.getName());
-        startActivity(intent);
-        break;
-      case R.id.menu_help:
-        intent.setClassName(this, HelpActivity.class.getName());
-        startActivity(intent);
-        break;
-      default:
-        return super.onOptionsItemSelected(item);
-    }
-    return true;
-  }
+//  @Override
+//  public boolean onCreateOptionsMenu(Menu menu) {
+//    MenuInflater menuInflater = getMenuInflater();
+//    menuInflater.inflate(R.menu.capture, menu);
+//    return super.onCreateOptionsMenu(menu);
+//  }
+//
+//  @Override
+//  public boolean onOptionsItemSelected(MenuItem item) {
+//    Intent intent = new Intent(Intent.ACTION_VIEW);
+//    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+//    switch (item.getItemId()) {
+//      case R.id.menu_share:
+//        intent.setClassName(this, ShareActivity.class.getName());
+//        startActivity(intent);
+//        break;
+//      case R.id.menu_history:
+//
+//        break;
+//      case R.id.menu_settings:
+//        intent.setClassName(this, PreferencesActivity.class.getName());
+//        startActivity(intent);
+//        break;
+//      case R.id.menu_help:
+//        intent.setClassName(this, HelpActivity.class.getName());
+//        startActivity(intent);
+//        break;
+//      default:
+//        return super.onOptionsItemSelected(item);
+//    }
+//    return true;
+//  }
 
   private void decodeOrStoreSavedBitmap(Bitmap bitmap, Result result) {
     // Bitmap isn't used yet -- will be used soon
