@@ -1,7 +1,0 @@
-#Fri Dec 09 10:26:14 CST 2016
-base.0=/Users/sharkren/AndroidStudioProjects/SuperScanCode/ZxingAndroid/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_cdd0a161e9b9c7fbb9045d5c0d5d8e7fddeb17d4
-renamed.1=classes.dex
-renamed.0=classes2.dex
-file.1=/Users/sharkren/AndroidStudioProjects/SuperScanCode/ZxingAndroid/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_9880f93fe9895458cc84c1600327af88eb606dfa/classes.dex
-base.1=/Users/sharkren/AndroidStudioProjects/SuperScanCode/ZxingAndroid/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_9880f93fe9895458cc84c1600327af88eb606dfa
-file.0=/Users/sharkren/AndroidStudioProjects/SuperScanCode/ZxingAndroid/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_cdd0a161e9b9c7fbb9045d5c0d5d8e7fddeb17d4/classes.dex
