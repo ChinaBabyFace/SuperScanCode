@@ -17,5 +17,5 @@
 <resources>
   <string name="button_ok">OK</string>
   <string name="msg_camera_framework_bug">Désolé, la caméra Android a rencontré un problème. Un redémarrage de l\'appareil est peut-être nécessaire.</string>
-  <string name="msg_default_format">Format</string>
+  <string name="msg_default_status">Encadrez un code-barres avec le viseur pour le balayer.</string>
 </resources>
