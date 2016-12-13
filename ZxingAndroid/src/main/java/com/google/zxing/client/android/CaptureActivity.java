@@ -19,12 +19,8 @@ package com.google.zxing.client.android;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
-import com.google.zxing.ResultMetadataType;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.result.ResultButtonListener;
-import com.google.zxing.client.android.result.ResultHandler;
-import com.google.zxing.client.android.result.ResultHandlerFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -326,15 +322,13 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
         inactivityTimer.onActivity();
         lastResult = rawResult;
-        ResultHandler resultHandler = ResultHandlerFactory.makeResultHandler(this, rawResult);
-
         boolean fromLiveScan = barcode != null;
         if (fromLiveScan) {
             // Then not from history, so beep/vibrate and we have an image to draw on
             beepManager.playBeepSoundAndVibrate();
             //在扫描结果图片进行标记
             drawResultPoints(barcode, scaleFactor, rawResult);
-            handleDecodeInternally(rawResult, resultHandler, barcode);
+            handleDecodeInternally(rawResult, barcode);
         } else {
             restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
         }
@@ -384,9 +378,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
 
     // Put up our own UI for how to handle the decoded contents.
-    private void handleDecodeInternally(Result rawResult, ResultHandler resultHandler, Bitmap barcode) {
+    private void handleDecodeInternally(Result rawResult, Bitmap barcode) {
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(SCAN_CONTENT_KEY, resultHandler.getDisplayContents().toString());
+        resultIntent.putExtra(SCAN_CONTENT_KEY, rawResult.getText());
         setResult(SCAN_RESULT_CODE,resultIntent);
         finish();
         //        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -444,7 +438,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     private void displayFrameworkBugMessageAndExit() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.app_name));
         builder.setMessage(getString(R.string.msg_camera_framework_bug));
         builder.setPositiveButton(R.string.button_ok, new FinishListener(this));
         builder.setOnCancelListener(new FinishListener(this));
