@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -319,16 +320,22 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
      * @param scaleFactor amount by which thumbnail was scaled
      * @param barcode     A greyscale bitmap of the camera data which was decoded.
      */
-    public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
+    public void handleDecode(final Result rawResult, final Bitmap barcode, float scaleFactor) {
         inactivityTimer.onActivity();
         lastResult = rawResult;
         boolean fromLiveScan = barcode != null;
         if (fromLiveScan) {
             // Then not from history, so beep/vibrate and we have an image to draw on
-            beepManager.playBeepSoundAndVibrate();
+            beepManager.playBeepSoundAndVibrate(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    handleDecodeInternally(rawResult, barcode);
+                }
+            });
+
             //在扫描结果图片进行标记
             drawResultPoints(barcode, scaleFactor, rawResult);
-            handleDecodeInternally(rawResult, barcode);
+
         } else {
             restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
         }
