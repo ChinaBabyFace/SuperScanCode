@@ -16,12 +16,6 @@
 
 package com.google.zxing.client.android;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.Result;
-import com.google.zxing.ResultPoint;
-import com.google.zxing.client.android.camera.CameraManager;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -43,6 +37,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.DecodeHintType;
+import com.google.zxing.Result;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.camera.CameraManager;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
@@ -57,6 +57,7 @@ import java.util.Map;
  */
 public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
     public static final int SCAN_RESULT_CODE = 10086;
+    public static final int MSG_SCAN_RESULT = 10087;
     public static final String SCAN_CONTENT_KEY = "scan_content";
     private static final String TAG = CaptureActivity.class.getSimpleName();
 
@@ -79,6 +80,15 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     private InactivityTimer inactivityTimer;
     private BeepManager beepManager;
     private AmbientLightManager ambientLightManager;
+    private Handler resultHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == MSG_SCAN_RESULT) {
+                handleDecodeInternally((Result) msg.obj);
+            }
+        }
+    };
 
     ViewfinderView getViewfinderView() {
         return viewfinderView;
@@ -326,13 +336,26 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         boolean fromLiveScan = barcode != null;
         if (fromLiveScan) {
             // Then not from history, so beep/vibrate and we have an image to draw on
-            beepManager.playBeepSoundAndVibrate(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    handleDecodeInternally(rawResult, barcode);
-                }
-            });
+            try {
 
+
+                beepManager.playBeepSoundAndVibrate(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+
+                    }
+                });
+            } catch (Exception e) {
+            }
+            resultHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Message msg = new Message();
+                    msg.what = MSG_SCAN_RESULT;
+                    msg.obj = rawResult;
+                    resultHandler.sendMessage(msg);
+                }
+            }, 300);
             //在扫描结果图片进行标记
             drawResultPoints(barcode, scaleFactor, rawResult);
 
@@ -385,10 +408,10 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
 
     // Put up our own UI for how to handle the decoded contents.
-    private void handleDecodeInternally(Result rawResult, Bitmap barcode) {
+    private void handleDecodeInternally(Result rawResult/*, Bitmap barcode*/) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(SCAN_CONTENT_KEY, rawResult.getText());
-        setResult(SCAN_RESULT_CODE,resultIntent);
+        setResult(SCAN_RESULT_CODE, resultIntent);
         finish();
         //        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //
