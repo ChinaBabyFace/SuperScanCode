@@ -119,7 +119,7 @@ public final class CameraConfigurationUtils {
     float step = parameters.getExposureCompensationStep();
     if ((minExposure != 0 || maxExposure != 0) && step > 0.0f) {
       // Set low when light is on
-      float targetCompensation = lightOn ? MIN_EXPOSURE_COMPENSATION : MAX_EXPOSURE_COMPENSATION;
+      float targetCompensation =/* lightOn ? MIN_EXPOSURE_COMPENSATION : MAX_EXPOSURE_COMPENSATION*/0;
       int compensationSteps = Math.round(targetCompensation / step);
       float actualCompensation = step * compensationSteps;
       // Clamp value:
